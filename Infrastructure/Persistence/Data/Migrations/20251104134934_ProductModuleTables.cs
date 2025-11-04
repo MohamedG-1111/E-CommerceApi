@@ -5,7 +5,7 @@
 namespace Persistence.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class IntialCreated : Migration
+    public partial class ProductModuleTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -11,8 +11,8 @@ using Persistence.Data;
 namespace Persistence.Data.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    [Migration("20251030200756_IntialCreated")]
-    partial class IntialCreated
+    [Migration("20251104134934_ProductModuleTables")]
+    partial class ProductModuleTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
