@@ -6,6 +6,7 @@ using Persistence.Repositories;
 using Services;
 using Services.Abstractions.Contracts;
 using Services.MappingProfile;
+using StackExchange.Redis;
 
 namespace E_Commerce.Api
 {
@@ -30,6 +31,12 @@ namespace E_Commerce.Api
             builder.Services.AddAutoMapper(map => { }, typeof(MappingAssmebly).Assembly);
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddSingleton<IConnectionMultiplexer>(op =>
+            {
+                return ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("RedisConnection")!);
+            });
+            builder.Services.AddScoped<IBasketService, BasketService>();
+            builder.Services.AddScoped<IBasketRepository, BasketRepository>();
             
             var app = builder.Build();
 
