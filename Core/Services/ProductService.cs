@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Contracts;
 using Domain.Entities.ProductModule;
+using E_Commerce.Services.Exceptions;
 using Services.Abstractions.Contracts;
 using Services.Specifications;
 using Shared;
@@ -52,6 +53,8 @@ namespace Services
             var Spc = new ProductTypeAndBrandSpecification(id);
 
             var product = await unitOfWork.genericRepository<Product, int>().GetByIdAsync(Spc);
+            if (product == null)
+                throw new ProductNotFoundException(id);
             return mapper.Map<ProductDto>(product);
         }
      

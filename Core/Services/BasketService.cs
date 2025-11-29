@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Contracts;
 using Domain.Entities.BasketModule;
+
+using E_Commerce.Services.Exceptions;
 using Services.Abstractions.Contracts;
 using Shared.Dtos.BasketDTO;
 
@@ -37,8 +39,8 @@ namespace Services
         {
             var basket = await basketRepository.GetCustomerBasket(Key);
 
-            if (basket is null)
-                return null;
+            if (basket == null)
+                throw new BasketNotFoundException(Key.ToString());
 
             return mapper.Map<BasketDto>(basket);
         }

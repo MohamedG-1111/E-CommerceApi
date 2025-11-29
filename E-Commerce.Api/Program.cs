@@ -1,6 +1,10 @@
 
 using Domain.Contracts;
+using E_Commerce.Api.Factories;
+using E_Commerce.Api.Middleware;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Persistence.Data;
 using Persistence.Repositories;
 using Services;
@@ -37,6 +41,12 @@ namespace E_Commerce.Api
             });
             builder.Services.AddScoped<IBasketService, BasketService>();
             builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+            builder.Services.AddScoped<ICachServices, CachService>(); 
+            builder.Services.AddScoped<ICachRepository, CachRepository>();
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = ApiResponseFactory.GenerateApiVaildationsErrors;
+            });
             
             var app = builder.Build();
 
@@ -45,11 +55,38 @@ namespace E_Commerce.Api
             await objOfDataSeeding.SeedDataAsync();
 
             // Configure the HTTP request pipeline.
+
+
+
+            app.UseMiddleware<GlobalExceptionMiddleware>();
+            //app.Use(async (context, next) =>
+            //{
+            //    try
+            //    {
+            //        await next.Invoke(context);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Console.WriteLine(ex.Message); // Logging
+            //        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+            //        // write response
+            //        await context.Response.WriteAsJsonAsync(new
+            //        {
+            //            StatusCode = StatusCodes.Status500InternalServerError,
+            //            Message = ex.Message
+            //        });
+            //    }
+            //});
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+       
+
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
